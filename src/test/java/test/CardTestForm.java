@@ -1,6 +1,7 @@
 package test;
 
 import com.codeborne.selenide.SelenideElement;
+import data.DataGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -14,21 +15,46 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class CardTestForm {
-    LocalDate date = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    LocalDate nextDate = date.plusDays(3);
+    String name = DataGenerator.generateName();
+    String phone = DataGenerator.generatePhone();
+    String city = DataGenerator.generateCity();
 
     @Test
     void shouldFillInAllTheFields() {
-        open("http://localhost:9999/");
+        open("http://localhost:9999");
         SelenideElement form = $(".form");
-        $("[data-test-id='city'] input").setValue("Самара");
-        $("[data-test-id='date'] input").doubleClick().sendKeys(formatter.format(nextDate));
-        $("[data-test-id='name'] input").setValue("Петров Виталий");
-        $("[data-test-id='phone'] input").setValue("+79179778855");
-        $("[data-test-id='agreement']").click();
-        $(".button").click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(13));
-        $("[data-test-id='notification'] .notification__content").shouldHave(exactText("Встреча успешно забронирована на " + formatter.format(nextDate)));
+        form.$("[data-test-id=city] input").setValue(city);
+        form.$("[data-test-id=date] input").doubleClick().sendKeys(DataGenerator.generateDate(3));
+        form.$("[data-test-id=name] input").setValue(name);
+        form.$("[data-test-id=phone] input").setValue(phone);
+        form.$("[data-test-id=agreement]").click();
+        form.$(".button").click();
+        $(".notification_status_ok").shouldBe(visible);
+        $("[data-test-id='success-notification'] .notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(3)));
+        form.$("[data-test-id=date] input").doubleClick().sendKeys(DataGenerator.generateDate(7));
+        form.$(".button").click();
+        $("[data-test-id=replan-notification]").waitUntil(visible, 15000);
+        $(withText("Перепланировать")).click();
+        $(".notification_status_ok").shouldBe(visible);
+        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(7)));
     }
 }
+//    @Test
+//    void shouldSubmitRequest() {
+//        open("http://localhost:9999");
+//        SelenideElement form = $(".form");
+//        form.$("[data-test-id=city] input").setValue(city);
+//        form.$("[data-test-id=date] input").doubleClick().sendKeys(DataGenerator.generateDate(3));
+//        form.$("[data-test-id=name] input").setValue(name);
+//        form.$("[data-test-id=phone] input").setValue(phone);
+//        form.$("[data-test-id=agreement]").click();
+//        form.$(".button").click();
+//        $(".notification_status_ok").shouldBe(visible);
+//        $("[data-test-id='success-notification'] .notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(3)));
+//        form.$("[data-test-id=date] input").doubleClick().sendKeys(DataGenerator.generateDate(7));
+//        form.$(".button").click();
+//        $("[data-test-id=replan-notification]").waitUntil(visible, 15000);
+//        $(withText("Перепланировать")).click();
+//        $(".notification_status_ok").shouldBe(visible);
+//        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(7)));
+//    }
