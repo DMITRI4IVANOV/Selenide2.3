@@ -39,22 +39,3 @@ public class CardTestForm {
         $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(7)));
     }
 }
-//    @Test
-//    void shouldSubmitRequest() {
-//        open("http://localhost:9999");
-//        SelenideElement form = $(".form");
-//        form.$("[data-test-id=city] input").setValue(city);
-//        form.$("[data-test-id=date] input").doubleClick().sendKeys(DataGenerator.generateDate(3));
-//        form.$("[data-test-id=name] input").setValue(name);
-//        form.$("[data-test-id=phone] input").setValue(phone);
-//        form.$("[data-test-id=agreement]").click();
-//        form.$(".button").click();
-//        $(".notification_status_ok").shouldBe(visible);
-//        $("[data-test-id='success-notification'] .notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(3)));
-//        form.$("[data-test-id=date] input").doubleClick().sendKeys(DataGenerator.generateDate(7));
-//        form.$(".button").click();
-//        $("[data-test-id=replan-notification]").waitUntil(visible, 15000);
-//        $(withText("Перепланировать")).click();
-//        $(".notification_status_ok").shouldBe(visible);
-//        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + DataGenerator.generateDate(7)));
-//    }
